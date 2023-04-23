@@ -1,10 +1,11 @@
 import React from 'react';
-import {ButtonNamesFilterType} from "../App";
+import {ButtonNamesFilterType} from "../../App";
+import s from './SuperButton.module.css'
 
 type SuperButtonPropsType = {
-	callBack: (name: ButtonNamesFilterType) => void
+	callBack: (name: any) => void
 	name: ButtonNamesFilterType
-	disabled: boolean
+	disabled?: boolean
 }
 
 const SuperButton = (props: SuperButtonPropsType) => {
@@ -14,10 +15,10 @@ const SuperButton = (props: SuperButtonPropsType) => {
 
 	return (
 		<button
-			className={'buttons-group-block__item'}
+			className={s.item}
 			disabled={props.disabled}
 			onClick={callBackHandler}>{props.name}
 		</button>
 	)
 }
-export default SuperButton;
+export default SuperButton
