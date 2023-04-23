@@ -1,0 +1,41 @@
+.buttonsGroup {
+	display: flex;
+	align-items: center;
+	height: 50px;
+	flex-direction: row;
+	justify-content: center;
+	padding: 10px 10px;
+	border: 3px solid #33a183;
+	border-radius: 10px;
+	margin-top: 30px;
+}
+
+.table {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 85px;
+	border: 3px solid #33a183;
+	border-radius: 10px;
+	background-color: #9cdcfe;
+}
+
+.table input {
+	width: 80px;
+	text-align: center;
+	border: 1px solid black;
+}
+
+.item {
+	display: flex;
+	flex-direction: row;
+	width: 200px;
+	justify-content: space-between;
+	margin: 5px 0;
+}
+
+.red {
+	background-color: #f68888;
+	border: 1px solid red;
+}
