@@ -25,6 +25,7 @@ function App() {
 	}
 
 	useEffect(() => {
+		debugger
 		const storedMaxValue = loadStateValue('maxValue')
 		const storedMinValue = loadStateValue('minValue')
 		if (storedMaxValue) {
