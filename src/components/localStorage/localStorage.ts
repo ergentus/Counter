@@ -1,8 +1,8 @@
 export const saveStateValue = (key: string, count: string) => {
-	localStorage.setItem(key, JSON.stringify(count))
+	localStorage.setItem(key, count)
 }
 
 export const loadStateValue = (key: string) => {
 	const value = localStorage.getItem(key)
-	if (value) return JSON.parse(value)
+	if (value) return value
 }
