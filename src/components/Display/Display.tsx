@@ -14,16 +14,13 @@ const Display = (props: DisplayPropsType) => {
 
 	const error = useSelector<AppStateType, boolean>(state => state.counter.isError)
 
-	const isError = error || props.value >= props.max - props.min
-		? s.error
-		: ''
+
+	const isError = error || props.value >= props.max - props.min ? s.error : ''
 	const fontDisplay = props.isSet ? s.bigfont : s.little
 
 	const counterValue = error
 		? 'incorrect value!'
-		: props.isSet
-			? props.value + props.min
-			: `enter values and press 'set'`
+		: (props.isSet && (props.value + props.min).toString()) || `enter values and press 'set'`
 
 	return (
 		<h1 className={`${isError} ${fontDisplay}`}>{counterValue}</h1>
