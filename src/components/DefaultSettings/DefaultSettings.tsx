@@ -2,41 +2,49 @@ import React, {ChangeEvent} from 'react'
 import SuperButton from '../SuperButton/SuperButton'
 import {ButtonNamesFilterType} from '../../App'
 import s from './DefaultSettings.module.css'
+import {useDispatch, useSelector} from 'react-redux'
+import {setErrorAC, setMaxAC, setMinAC, setResetAC, setSettingsAC} from '../../redux/count-reducer'
+import {AppStateType} from '../../redux/redux-store'
 
 type DefaultSettingsPropsType = {
 	name: ButtonNamesFilterType
-	callBack: (name: any) => void
-	minValue: number
-	maxValue: number
-	setMinValue: (value: string) => void
-	setMaxValue: (value: string) => void
-	btnSetting: boolean
-	setBtnSetting: (value: boolean) => void
-	error: boolean
-	setError: (value: boolean) => void
-	setCount: (value: number) => void
+	callBack: (name: ButtonNamesFilterType) => void
+	isSet: boolean
+	min: number
+	max: number
 }
 
 export const DefaultSettings = (props: DefaultSettingsPropsType) => {
+	const error = useSelector<AppStateType, boolean>(state => state.counter.isError)
+	const dispatch = useDispatch()
+	const isMinMaxValid = (min: number, max: number) => min >= 0 && max > min
 
 	const onChangeMaxValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
-		+e.currentTarget.value < 0 || props.minValue >= +e.currentTarget.value || props.minValue < 0
-			? props.setError(true) : props.setError(false)
-
-		props.setMaxValue(e.currentTarget.value)
-		props.setCount(0)
-		props.setBtnSetting(false)
+		const maxValue = +e.currentTarget.value
+		if (isMinMaxValid(props.min, maxValue)) {
+			dispatch(setMaxAC(maxValue))
+			dispatch(setSettingsAC(false))
+			dispatch(setResetAC())
+			dispatch(setErrorAC(false))
+		} else {
+			dispatch(setMaxAC(maxValue))
+			dispatch(setErrorAC(true))
+		}
 	}
 	const onChangeMinValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
-		+e.currentTarget.value < 0 || props.maxValue <= +e.currentTarget.value
-			? props.setError(true) : props.setError(false)
-
-		props.setMinValue(e.currentTarget.value)
-		props.setCount(0)
-		props.setBtnSetting(false)
+		const minValue = +e.currentTarget.value
+		if (isMinMaxValid(minValue, props.max)) {
+			dispatch(setMinAC(minValue))
+			dispatch(setSettingsAC(false))
+			dispatch(setResetAC())
+			dispatch(setErrorAC(false))
+		} else {
+			dispatch(setMinAC(minValue))
+			dispatch(setErrorAC(true))
+		}
 	}
 
-	const errorRed = props.error ? s.red : ''
+	const errorRed = error ? s.red : ''
 
 	return (
 		<>
@@ -46,7 +54,7 @@ export const DefaultSettings = (props: DefaultSettingsPropsType) => {
 					<input
 						className={errorRed}
 						type="number"
-						value={props.maxValue}
+						value={props.max}
 						onChange={onChangeMaxValueHandler}
 					/>
 				</div>
@@ -55,13 +63,13 @@ export const DefaultSettings = (props: DefaultSettingsPropsType) => {
 					<input
 						className={errorRed}
 						type="number"
-						value={props.minValue}
+						value={props.min}
 						onChange={onChangeMinValueHandler}
 					/>
 				</div>
 			</div>
 			<div className={s.buttonsGroup}>
-				<SuperButton name={props.name} callBack={props.callBack} disabled={props.error || props.btnSetting}/>
+				<SuperButton name={props.name} callBack={props.callBack} disabled={error || props.isSet}/>
 			</div>
 		</>
 	)

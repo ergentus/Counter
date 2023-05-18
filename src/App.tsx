@@ -1,46 +1,42 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {DefaultSettings} from './components/DefaultSettings/DefaultSettings'
 import Display from './components/Display/Display'
 import SuperButton from './components/SuperButton/SuperButton'
 import s from './App.module.css'
-import {loadStateValue, saveStateValue} from './components/localStorage/localStorage'
+import {useDispatch, useSelector} from 'react-redux'
+import {AppStateType} from './redux/redux-store'
+import {setPlusIncrementAC, setResetAC, setSettingsAC} from './redux/count-reducer'
+
 
 export type ButtonNamesFilterType = 'inc' | 'reset' | 'set'
 
 function App() {
 
-	const [count, setCount] = useState<number>(0)
-	const [minValue, setMinValue] = useState<string>('0')
-	const [maxValue, setMaxValue] = useState<string>('5')
-	const [btnSetting, setBtnSetting] = useState<boolean>(true)
-	const [error, setError] = useState<boolean>(false)
+	const value = useSelector<AppStateType, number>(state => state.counter.value)
+	const isSet = useSelector<AppStateType, boolean>(state => state.counter.isSet)
+	const min = useSelector<AppStateType, number>(state => state.counter.min)
+	const max = useSelector<AppStateType, number>(state => state.counter.max)
+
+	const dispatch = useDispatch()
+
 	const CounterFc = (name: ButtonNamesFilterType) => {
-		if (name === 'inc') setCount(count + 1)
-		if (name === 'reset') setCount(0)
-		if (name === 'set') {
-			setBtnSetting(true)
-			saveStateValue('minValue', minValue)
-			saveStateValue('maxValue', maxValue)
+		switch (name) {
+			case 'inc':
+				dispatch(setPlusIncrementAC())
+				break
+			case 'reset':
+				dispatch(setResetAC())
+				break
+			case 'set':
+				dispatch(setSettingsAC(true))
+				break
+			default:
+				break
 		}
 	}
 
-	useEffect(() => {
-		const storedMaxValue = loadStateValue('maxValue')
-		const storedMinValue = loadStateValue('minValue')
-		if (storedMaxValue) {
-			setMaxValue(storedMaxValue)
-		}
-		if (storedMinValue) {
-			setMinValue(storedMinValue)
-		}
-	}, [])
-
-	const minCount = +minValue
-	const maxCount = +maxValue
-	const settingsIsChanging = !btnSetting
-
-	const isMax = count >= maxCount - minCount || !setBtnSetting
-	const isDisable = count + minCount === minCount || !setBtnSetting
+	const isMax = value >= max - min || !isSet
+	const isDisabled = value + min === min || !isSet
 
 	return (
 		<div className={s.main}>
@@ -48,30 +44,23 @@ function App() {
 				<DefaultSettings
 					name={'set'}
 					callBack={CounterFc}
-					minValue={minCount}
-					maxValue={maxCount}
-					setMinValue={setMinValue}
-					setMaxValue={setMaxValue}
-					btnSetting={btnSetting}
-					setBtnSetting={setBtnSetting}
-					setError={setError}
-					error={error}
-					setCount={setCount}
+					isSet={isSet}
+					min={min}
+					max={max}
 				/>
 			</div>
 			<div className={s.counter}>
 				<div className={s.table}>
 					<Display
-						count={count}
-						minValue={minCount}
-						maxValue={maxCount}
-						btnSetting={btnSetting}
-						error={error}
+						value={value}
+						isSet={isSet}
+						min={min}
+						max={max}
 					/>
 				</div>
 				<div className={s.buttonsGroup}>
-					<SuperButton name={'inc'} callBack={CounterFc} disabled={isMax || settingsIsChanging}/>
-					<SuperButton name={'reset'} callBack={CounterFc} disabled={isDisable || settingsIsChanging}/>
+					<SuperButton name={'inc'} callBack={CounterFc} disabled={isMax}/>
+					<SuperButton name={'reset'} callBack={CounterFc} disabled={isDisabled}/>
 				</div>
 			</div>
 		</div>
@@ -79,3 +68,16 @@ function App() {
 }
 
 export default App
+
+// saveStateValue('minValue', minValue)
+// saveStateValue('maxValue', maxValue)
+// useEffect(() => {
+// 	const storedMaxValue = loadStateValue('maxValue')
+// 	const storedMinValue = loadStateValue('minValue')
+// 	if (storedMaxValue) {
+// 		setMaxValue(storedMaxValue)
+// 	}
+// 	if (storedMinValue) {
+// 		setMinValue(storedMinValue)
+// 	}
+// }, [])
