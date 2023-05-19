@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react'
 import {ButtonNamesFilterType} from "../../App";
 import s from './SuperButton.module.css'
 
@@ -8,7 +8,7 @@ type SuperButtonPropsType = {
 	disabled?: boolean
 }
 
-const SuperButton = (props: SuperButtonPropsType) => {
+const SuperButton = memo((props: SuperButtonPropsType) => {
 	const callBackHandler = () => {
 		props.callBack(props.name)
 	}
@@ -20,5 +20,5 @@ const SuperButton = (props: SuperButtonPropsType) => {
 			onClick={callBackHandler}>{props.name}
 		</button>
 	)
-}
+})
 export default SuperButton

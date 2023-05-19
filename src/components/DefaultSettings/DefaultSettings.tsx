@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from 'react'
+import React, {ChangeEvent, memo} from 'react'
 import SuperButton from '../SuperButton/SuperButton'
 import {ButtonNamesFilterType} from '../../App'
 import s from './DefaultSettings.module.css'
@@ -14,7 +14,7 @@ type DefaultSettingsPropsType = {
 	max: number
 }
 
-export const DefaultSettings = (props: DefaultSettingsPropsType) => {
+export const DefaultSettings = memo((props: DefaultSettingsPropsType) => {
 	const error = useSelector<AppStateType, boolean>(state => state.counter.isError)
 	const dispatch = useDispatch()
 	const isMinMaxValid = (min: number, max: number) => min >= 0 && max > min
@@ -73,5 +73,5 @@ export const DefaultSettings = (props: DefaultSettingsPropsType) => {
 			</div>
 		</>
 	)
-}
+})
 

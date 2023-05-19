@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {DefaultSettings} from './components/DefaultSettings/DefaultSettings'
 import Display from './components/Display/Display'
 import SuperButton from './components/SuperButton/SuperButton'
@@ -19,7 +19,7 @@ function App() {
 
 	const dispatch = useDispatch()
 
-	const CounterFc = (name: ButtonNamesFilterType) => {
+	const CounterFc = useCallback((name: ButtonNamesFilterType) => {
 		switch (name) {
 			case 'inc':
 				dispatch(setPlusIncrementAC())
@@ -33,7 +33,7 @@ function App() {
 			default:
 				break
 		}
-	}
+	},[])
 
 	const isMax = value >= max - min || !isSet
 	const isDisabled = value + min === min || !isSet
